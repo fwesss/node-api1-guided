@@ -1,5 +1,5 @@
-import express from 'express';
-import { find, add, remove, update, findById } from './data/hubs-model';
+const express = require('express');
+const users = require('./data/db');
 
 const server = express();
 
@@ -9,83 +9,113 @@ server.listen(4000, () => {
 
 server.use(express.json());
 
-server.get('/', (request, response) => {
-  response.send('hello world...');
+server.get('/', (_req, res) => {
+  res.send('hello world...');
 });
 
-server.get('/hubs', (req, res) => {
-  find()
-    .then((hubs) => {
-      res.status(200).json(hubs);
-    })
-    .catch((err) => {
-      res.status(500).json({ sucess: false, err });
-    });
-});
+// server.get('/hubs', (req, res) => {
+//   hubs
+//     .find()
+//     .then((hubs) => {
+//       res.status(200).json(hubs);
+//     })
+//     .catch((err) => {
+//       res.status(500).json({ sucess: false, err });
+//     });
+// });
 
-server.post('/hubs', (req, res) => {
-  const hubInfo = req.body;
+// server.post('/hubs', (req, res) => {
+//   const hubInfo = req.body;
 
-  add(hubInfo)
-    .then((hub) => {
-      res.status(201).json({ success: true, hub });
-    })
-    .catch((err) => {
-      res.status(500).json({ success: false, err });
-    });
-});
+//   hubs
+//     .add(hubInfo)
+//     .then((hub) => {
+//       res.status(201).json({ success: true, hub });
+//     })
+//     .catch((err) => {
+//       res.status(500).json({ success: false, err });
+//     });
+// });
 
-server.delete('/hubs/:id', (req, res) => {
-  const { id } = req.params;
-  console.log('yeah');
+// server.delete('/hubs/:id', (req, res) => {
+//   const { id } = req.params;
 
-  remove(id)
-    .then((deletedHub) => {
-      if (deletedHub) {
-        res.status(204).end();
-      } else {
-        res.status(404).json({ message: 'id not found' });
-      }
-    })
-    .catch((err) => {
-      res.status(500).json({ success: false, err });
-    });
-});
+//   hubs
+//     .remove(id)
+//     .then((deletedHub) => {
+//       if (deletedHub) {
+//         res.status(204).end();
+//       } else {
+//         res.status(404).json({ message: 'id not found' });
+//       }
+//     })
+//     .catch((err) => {
+//       res.status(500).json({ success: false, err });
+//     });
+// });
 
-server.put('/hubs/:id', (req, res) => {
-  const { id } = req.params;
-  const hubInfo = req.body;
+// server.put('/hubs/:id', (req, res) => {
+//   const { id } = req.params;
+//   const hubInfo = req.body;
 
-  update(id, hubInfo)
-    .then((hub) => {
-      if (hub) {
-        res.status(200).json({ success: true, hub });
-      } else {
-        res.status(404).json({ success: false, message: 'id not found' });
-      }
-    })
-    .catch((err) => {
-      res.status(500).json({ success: false, err });
-    });
-});
+//   hubs
+//     .update(id, hubInfo)
+//     .then((hub) => {
+//       if (hub) {
+//         res.status(200).json({ success: true, hub });
+//       } else {
+//         res.status(404).json({ success: false, message: 'id not found' });
+//       }
+//     })
+//     .catch((err) => {
+//       res.status(500).json({ success: false, err });
+//     });
+// });
 
-server.get('/hubs/:id', (req, res) => {
-  findById(req.params.id)
-    .then((hub) => {
-      if (hub) {
-        res.status(200).json({ success: true, hub });
-      } else {
-        res.status(404).json({ success: false, message: 'id not found' });
-      }
-    })
-    .catch((err) => {
-      res.status(500).json({ success: false, err });
-    });
-});
+// server.get('/hubs/:id', (req, res) => {
+//   hubs
+//     .findById(req.params.id)
+//     .then((hub) => {
+//       if (hub) {
+//         res.status(200).json({ success: true, hub });
+//       } else {
+//         res.status(404).json({ success: false, message: 'id not found' });
+//       }
+//     })
+//     .catch((err) => {
+//       res.status(500).json({ success: false, err });
+//     });
+// });
 
 // Users
-server.get('/users', (req, res) => {
-  find()
+server.post('/users', (req, res) => {
+  const userInfo = req.body;
+
+  if (!userInfo.name || !userInfo.bio) {
+    res.status(400).json({
+      success: false,
+      errorMessage: 'Please provide name and bio for the user.',
+    });
+  } else {
+    users
+      .insert(userInfo)
+      .then((user) => {
+        res.status(201).json({ success: true, user });
+      })
+      .catch((error) => {
+        res.status(500).json({
+          success: false,
+          errorMessage:
+            'There was an error while saving the user to the database',
+          error,
+        });
+      });
+  }
+});
+
+server.get('/users', (_req, res) => {
+  users
+    .find()
     .then((hubs) => {
       res.status(200).json(users);
     })

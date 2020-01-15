@@ -171,3 +171,32 @@ server.delete('/users/:id', (req, res) => {
       });
     });
 });
+
+server.put('/users/:id', (req, res) => {
+  if (!req.body.name || !req.body.bio) {
+    res.status(400).json({
+      success: false,
+      errorMessage: 'Please provide name and bio for the user.',
+    });
+  } else {
+    users
+      .update(req.params.id, req.body)
+      .then((user) => {
+        if (user) {
+          res.status(200).json({ success: true, user });
+        } else {
+          res.status(404).json({
+            success: false,
+            message: 'The user with the specified ID does not exist.',
+          });
+        }
+      })
+      .catch((error) => {
+        res.status(500).json({
+          success: false,
+          errorMessage: 'The user information could not be modified.',
+          error,
+        });
+      });
+  }
+});

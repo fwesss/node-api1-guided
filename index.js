@@ -82,3 +82,18 @@ server.get('/hubs/:id', (req, res) => {
       res.status(500).json({ success: false, err });
     });
 });
+
+// Users
+server.get('/users', (req, res) => {
+  find()
+    .then((hubs) => {
+      res.status(200).json(users);
+    })
+    .catch((err) => {
+      res.status(500).json({
+        success: false,
+        errorMessage: 'The users information could not be retrieved.',
+        err,
+      });
+    });
+});

@@ -1,7 +1,7 @@
 export default function(knex) {
   return knex('hubs')
     .truncate()
-    .then(function() {
+    .then(() => {
       const hubs = [
         { name: 'api-1' }, // 1
         { name: 'api-2' }, // 2

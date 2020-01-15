@@ -149,3 +149,25 @@ server.get('/users/:id', (req, res) => {
       });
     });
 });
+
+server.delete('/users/:id', (req, res) => {
+  users
+    .remove(req.params.id)
+    .then((deletedUser) => {
+      if (deletedUser) {
+        res.status(204).end();
+      } else {
+        res.status(404).json({
+          success: false,
+          message: 'The user with the specified ID does not exist.',
+        });
+      }
+    })
+    .catch((error) => {
+      res.status(500).json({
+        success: false,
+        errorMessage: 'The user could not be removed',
+        error,
+      });
+    });
+});

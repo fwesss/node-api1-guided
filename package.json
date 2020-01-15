@@ -18,6 +18,7 @@
     "url": "git+https://github.com/LambdaSchool/node-api1-guided.git"
   },
   "author": "Lambda School",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "check-format": "yarn run prettier --ignore-path .gitignore --list-different",
@@ -26,7 +27,7 @@
     "format": "yarn run prettier --ignore-path .gitignore --write",
     "lint": "eslint --ext .js .",
     "prettier": "prettier --ignore-path .gitignore \"**/*.+(json|js)\"",
-    "server": "nodemon index.js",
+    "server": "nodemon --experimental-modules --es-module-specifier-resolution=node index.js",
     "validate": "npm-run-all --parallel check-format lint"
   },
   "husky": {
@@ -38,9 +39,6 @@
     "**/*.+(js|json)": [
       "prettier --write",
       "git add"
-    ],
-    "*.+(js)": [
-      "eslint"
     ],
     "package.json": [
       "sort-package-json",

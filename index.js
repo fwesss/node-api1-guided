@@ -116,7 +116,7 @@ server.post('/users', (req, res) => {
 server.get('/users', (_req, res) => {
   users
     .find()
-    .then((hubs) => {
+    .then((users) => {
       res.status(200).json(users);
     })
     .catch((err) => {
